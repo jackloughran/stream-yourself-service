@@ -30,13 +30,14 @@ func visit(path string, f os.FileInfo, err error) error {
 			return err
 		}
 
-		songs = append(songs, Song{m.Artist(), m.Title(), m.Album(), path + f.Name()})
+		songs = append(songs, Song{m.Artist(), m.Title(), m.Album(), path})
 	}
 	return nil
 }
 
 //GetSongs returns Song objects based on what it finds in the watchedDir
 func GetSongs() ([]Song, error) {
+	songs = nil
 	filepath.Walk(watchedDir, visit)
 
 	return songs, nil
