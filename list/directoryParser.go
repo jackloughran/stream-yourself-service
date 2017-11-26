@@ -1,18 +1,21 @@
 package list
 
 import (
+	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/dhowden/tag"
 )
 
 const (
-	watchedDir = "/Users/jackloughran/Downloads/parseme"
+	configFile = "config"
 )
 
 var songs []Song
+var watchedDir = getWatchDir()
 
 func visit(path string, f os.FileInfo, err error) error {
 	fileName := f.Name()
@@ -41,4 +44,13 @@ func GetSongs() ([]Song, error) {
 	filepath.Walk(watchedDir, visit)
 
 	return songs, nil
+}
+
+func getWatchDir() string {
+	dat, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		log.Fatal("Error reading config file: " + err.Error())
+	}
+
+	return strings.Trim(string(dat), "\n")
 }
