@@ -1,2 +1,4 @@
 main
-config
+build.sh
+watchDir
+serveDir
