@@ -2,3 +2,4 @@ main
 build.sh
 watchDir
 serveDir
+.DS_Store

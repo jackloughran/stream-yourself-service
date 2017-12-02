@@ -15,7 +15,8 @@ const (
 	serveDirFile = "serveDir"
 )
 
-var songs []Song
+// Songs lists all the songs, artists, and albums
+var Songs []Song
 var watchDir = getWatchDir()
 var serveDir = getServeDir()
 
@@ -35,17 +36,33 @@ func visit(path string, f os.FileInfo, err error) error {
 			return err
 		}
 
-		songs = append(songs, Song{m.Artist(), m.Title(), m.Album(), serveDir + path[len(watchDir):]})
+		var coverArt string
+
+		folder := serveDir + path[len(watchDir):len(path)-len(f.Name())]
+		if art, err := filepath.Glob(folder + "*.jpg"); art != nil {
+			coverArt = art[0]
+		} else if err != nil {
+			log.Printf("error searching for cover art: %v", err)
+		}
+
+		if art, err := filepath.Glob(folder + "*.png"); art != nil {
+			coverArt = art[0]
+		} else if err != nil {
+			log.Printf("error searching for cover art: %v", err)
+		}
+
+		Songs = append(Songs, Song{m.Artist(), m.Title(), m.Album(), coverArt, serveDir + path[len(watchDir):]})
 	}
+
 	return nil
 }
 
-//GetSongs returns Song objects based on what it finds in the watchedDir
-func GetSongs() ([]Song, error) {
-	songs = nil
+// Parse initiates a walkthrough of the directory to find songs and pictures
+func Parse() error {
+	Songs = nil
 	filepath.Walk(watchDir, visit)
 
-	return songs, nil
+	return nil
 }
 
 func getWatchDir() string {
