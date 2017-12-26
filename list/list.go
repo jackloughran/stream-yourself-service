@@ -8,6 +8,7 @@ import (
 
 //Song represents basic information about songs found in the directory
 type Song struct {
+	ID       string `json:"id"`
 	Artist   string `json:"artist"`
 	Title    string `json:"title"`
 	Album    string `json:"album"`

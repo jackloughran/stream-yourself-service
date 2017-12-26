@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/dhowden/tag"
@@ -51,7 +52,7 @@ func visit(path string, f os.FileInfo, err error) error {
 			log.Printf("error searching for cover art: %v", err)
 		}
 
-		Songs = append(Songs, Song{m.Artist(), m.Title(), m.Album(), coverArt, serveDir + path[len(watchDir):]})
+		Songs = append(Songs, Song{strconv.Itoa(len(Songs)), m.Artist(), m.Title(), m.Album(), coverArt, serveDir + path[len(watchDir):]})
 	}
 
 	return nil
