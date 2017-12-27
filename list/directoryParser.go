@@ -16,9 +16,21 @@ const (
 	serveDirFile = "serveDir"
 )
 
+//Song represents basic information about songs found in the directory
+type Song struct {
+	ID     string `json:"id"`
+	Artist string `json:"artist"`
+	Title  string `json:"title"`
+	Album  string `json:"album"`
+	ArtLoc string `json:"artLoc"`
+	Loc    string `json:"loc"`
+}
+
 // Songs lists all the songs, artists, and albums
 var Songs []Song
-var watchDir = getWatchDir()
+
+// WatchDir holds the directory where the music is stored
+var WatchDir = getWatchDir()
 var serveDir = getServeDir()
 
 func visit(path string, f os.FileInfo, err error) error {
@@ -37,22 +49,7 @@ func visit(path string, f os.FileInfo, err error) error {
 			return err
 		}
 
-		var coverArt string
-
-		folder := serveDir + path[len(watchDir):len(path)-len(f.Name())]
-		if art, err := filepath.Glob(folder + "*.jpg"); art != nil {
-			coverArt = art[0]
-		} else if err != nil {
-			log.Printf("error searching for cover art: %v", err)
-		}
-
-		if art, err := filepath.Glob(folder + "*.png"); art != nil {
-			coverArt = art[0]
-		} else if err != nil {
-			log.Printf("error searching for cover art: %v", err)
-		}
-
-		Songs = append(Songs, Song{strconv.Itoa(len(Songs)), m.Artist(), m.Title(), m.Album(), coverArt, serveDir + path[39:]})
+		Songs = append(Songs, Song{strconv.Itoa(len(Songs)), m.Artist(), m.Title(), m.Album(), "http://138.197.172.114:48001/api/art?fileName=" + fileName, serveDir + path[39:]})
 	}
 
 	return nil
@@ -61,7 +58,7 @@ func visit(path string, f os.FileInfo, err error) error {
 // Parse initiates a walkthrough of the directory to find songs and pictures
 func Parse() error {
 	Songs = nil
-	filepath.Walk(watchDir, visit)
+	filepath.Walk(WatchDir, visit)
 
 	return nil
 }
