@@ -1,3 +1,3 @@
-# TODO:
-* move watch url to config file instead of hardcoded
+# Stream Yourself Service
 
+*backend supporting [stream yourself](https://github.com/jackloughran/stream-yourself)*
