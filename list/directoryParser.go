@@ -3,6 +3,7 @@ package list
 import (
 	"io/ioutil"
 	"log"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -49,7 +50,7 @@ func visit(path string, f os.FileInfo, err error) error {
 			return err
 		}
 
-		Songs = append(Songs, Song{strconv.Itoa(len(Songs)), m.Artist(), m.Title(), m.Album(), "http://138.197.172.114:48001/api/art?fileName=" + fileName, serveDir + path[39:]})
+		Songs = append(Songs, Song{strconv.Itoa(len(Songs)), m.Artist(), m.Title(), m.Album(), "http://138.197.172.114:48001/api/art?fileName=" + url.QueryEscape(fileName), serveDir + path[39:]})
 	}
 
 	return nil
